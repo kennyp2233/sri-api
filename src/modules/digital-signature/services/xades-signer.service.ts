@@ -1,31 +1,46 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CertificateManagerService } from './certificate-manager.service';
 import { XmlValidatorService } from './xml-validator.service';
 import { SignatureResult } from '../types/signature.types';
+
+// Configurar DOM y Web Crypto para Node.js
+if (typeof window === 'undefined') {
+    const { JSDOM } = require('jsdom');
+    const { Crypto } = require('@peculiar/webcrypto');
+
+    const dom = new JSDOM();
+    global.DOMParser = dom.window.DOMParser;
+    global.XMLSerializer = dom.window.XMLSerializer;
+    global.document = dom.window.document;
+
+    // Configurar Web Crypto (solo si no existe)
+    if (!globalThis.crypto) {
+        const crypto = new Crypto();
+        globalThis.crypto = crypto;
+    }
+}
 
 @Injectable()
 export class XadesSignerService {
     private readonly logger = new Logger(XadesSignerService.name);
 
     constructor(
-        private certificateManager: CertificateManagerService,
         private xmlValidator: XmlValidatorService,
-    ) { }
+    ) {}
 
-    async signXml(xmlString: string): Promise<SignatureResult> {
+    async signXmlWithCertificate(xmlString: string, p12Data: Buffer, password: string): Promise<SignatureResult> {
         try {
-            this.logger.log('Iniciando proceso de firma XAdES-BES');
+            this.logger.log('Iniciando proceso de firma XAdES-BES con certificado proporcionado');
 
             // Validar XML antes de firmar
             if (!this.xmlValidator.validateXmlStructure(xmlString)) {
                 throw new Error('XML no válido para firma');
             }
 
-            // Cargar certificado
-            const { privateKey, certificate } = await this.certificateManager.loadCertificate();
+            // Cargar certificado desde P12
+            const { privateKey, certificate } = await this.loadCertificateFromP12(p12Data, password);
 
             // Validar certificado
-            if (!this.certificateManager.validateCertificate(certificate)) {
+            if (!this.validateCertificate(certificate)) {
                 throw new Error('Certificado inválido o expirado');
             }
 
@@ -33,9 +48,12 @@ export class XadesSignerService {
             const xmlWithNamespaces = this.addXadesNamespaces(xmlString);
 
             // Crear firma XAdES-BES
-            const signedXml = await this.createXadesSignature(xmlWithNamespaces, privateKey, certificate);
+            let signedXml = await this.createXadesSignature(xmlWithNamespaces, privateKey, certificate);
 
-            const certificateInfo = this.certificateManager.getCertificateInfo(certificate);
+            // Limpiar cualquier declaración XML duplicada
+            signedXml = this.cleanXmlDeclarations(signedXml);
+
+            const certificateInfo = this.getCertificateInfo(certificate);
 
             this.logger.log('Firma XAdES-BES completada exitosamente');
 
@@ -92,7 +110,20 @@ export class XadesSignerService {
             xmlDoc.documentElement.appendChild(signatureElement);
 
             const serializer = new XMLSerializer();
-            return serializer.serializeToString(xmlDoc);
+            let signedXmlString = serializer.serializeToString(xmlDoc);
+            
+            // Asegurar que solo haya una declaración XML al inicio
+            // y que no haya declaraciones XML duplicadas en el medio
+            signedXmlString = signedXmlString
+              .replace(/^<\?xml[^>]*\?>\s*<\?xml[^>]*\?>\s*/, '<?xml version="1.0" encoding="UTF-8"?>\n')
+              .replace(/<\?xml[^>]*\?>/g, ''); // Remover cualquier otra declaración XML
+            
+            // Asegurar que tenga la declaración al inicio
+            if (!signedXmlString.startsWith('<?xml')) {
+              signedXmlString = '<?xml version="1.0" encoding="UTF-8"?>\n' + signedXmlString;
+            }
+            
+            return signedXmlString;
         } catch (error) {
             this.logger.warn(`Error con xmldsigjs, usando implementación básica: ${error.message}`);
             return this.createBasicSignature(xmlString, privateKey, certificate);
@@ -105,6 +136,9 @@ export class XadesSignerService {
         const forge = require('node-forge');
 
         try {
+            // Limpiar cualquier declaración XML duplicada del input
+            xmlString = this.cleanXmlDeclarations(xmlString);
+            
             // Crear digest del XML
             const digest = crypto.createHash('sha256').update(xmlString).digest();
 
@@ -158,5 +192,63 @@ export class XadesSignerService {
     private extractSignatureValue(signedXml: string): string {
         const match = signedXml.match(/<ds:SignatureValue[^>]*>([^<]+)<\/ds:SignatureValue>/);
         return match ? match[1] : '';
+    }
+
+    private async loadCertificateFromP12(p12Data: Buffer, password: string): Promise<{ privateKey: any; certificate: any }> {
+        const forge = require('node-forge');
+
+        try {
+            const p12Asn1 = forge.asn1.fromDer(forge.util.createBuffer(p12Data));
+            const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, password);
+
+            // Extract private key
+            const keyBags = p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag });
+            const privateKey = keyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0].key;
+
+            // Extract certificate
+            const certBags = p12.getBags({ bagType: forge.pki.oids.certBag });
+            const certificate = certBags[forge.pki.oids.certBag][0].cert;
+
+            this.logger.log('Certificado cargado exitosamente desde P12');
+            return { privateKey, certificate };
+        } catch (error) {
+            this.logger.error(`Error cargando certificado desde P12: ${error.message}`);
+            throw error;
+        }
+    }
+
+    private validateCertificate(certificate: any): boolean {
+        const now = new Date();
+        const isValid = certificate.validity.notBefore <= now && now <= certificate.validity.notAfter;
+
+        if (!isValid) {
+            this.logger.warn('Certificado expirado o no válido');
+        }
+
+        return isValid;
+    }
+
+    private getCertificateInfo(certificate: any): any {
+        return {
+            subject: certificate.subject.getField('CN')?.value || '',
+            issuer: certificate.issuer.getField('CN')?.value || '',
+            validFrom: certificate.validity.notBefore,
+            validTo: certificate.validity.notAfter,
+            serialNumber: certificate.serialNumber,
+        };
+    }
+
+    /**
+     * Limpia declaraciones XML duplicadas o mal posicionadas
+     * Asegura que solo haya una declaración XML al inicio del documento
+     */
+    private cleanXmlDeclarations(xmlString: string): string {
+        // Remover todas las declaraciones XML
+        let cleaned = xmlString.replace(/<\?xml[^>]*\?>/gi, '');
+        
+        // Agregar una sola declaración al inicio
+        cleaned = '<?xml version="1.0" encoding="UTF-8"?>\n' + cleaned.trim();
+        
+        return cleaned;
     }
 }
