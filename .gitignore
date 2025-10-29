@@ -56,3 +56,8 @@ pids
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 /generated/prisma
+
+# Certificates
+cert/GEORGE MATTHEUS QUISHPE HIDALGO 1721294799-280725130934.p12
+
+
