@@ -12,11 +12,31 @@ export class SriXmlGeneratorService {
     try {
       this.logger.log('Generating SRI invoice XML');
 
+      // Validate required data
+      if (!invoiceData.items || invoiceData.items.length === 0) {
+        throw new Error('La factura debe contener al menos un item');
+      }
+
+      if (!invoiceData.razonSocialEmisor || !invoiceData.rucEmisor || !invoiceData.direccionEmisor) {
+        throw new Error('Faltan datos requeridos del emisor');
+      }
+
+      if (!invoiceData.razonSocialComprador || !invoiceData.identificacionComprador) {
+        throw new Error('Faltan datos requeridos del comprador');
+      }
+
       // Calculate totals
       const subtotal = invoiceData.items.reduce((sum, item) => {
-        const itemSubtotal = item.cantidad * item.precioUnitario - (item.descuento || 0);
+        const cantidad = Number(item.cantidad) || 0;
+        const precioUnitario = Number(item.precioUnitario) || 0;
+        const descuento = Number(item.descuento) || 0;
+        const itemSubtotal = cantidad * precioUnitario - descuento;
         return sum + itemSubtotal;
       }, 0);
+
+      if (isNaN(subtotal)) {
+        throw new Error('Los valores numéricos de los items contienen datos inválidos');
+      }
 
       const iva = subtotal * 0.15; // 15% IVA (adjust based on your needs)
       const total = subtotal + iva;
@@ -92,15 +112,18 @@ ${this.generateDetallesXml(invoiceData.items)}
   private generateDetallesXml(items: any[]): string {
     return items
       .map((item, index) => {
-        const subtotal = item.cantidad * item.precioUnitario - (item.descuento || 0);
+        const cantidad = Number(item.cantidad) || 0;
+        const precioUnitario = Number(item.precioUnitario) || 0;
+        const descuento = Number(item.descuento) || 0;
+        const subtotal = cantidad * precioUnitario - descuento;
         const iva = subtotal * 0.15;
 
         return `    <detalle>
       <codigoPrincipal>${item.codigoPrincipal || `ITEM-${index + 1}`}</codigoPrincipal>
       <descripcion>${this.escapeXml(item.descripcion)}</descripcion>
-      <cantidad>${item.cantidad.toFixed(2)}</cantidad>
-      <precioUnitario>${item.precioUnitario.toFixed(6)}</precioUnitario>
-      <descuento>${(item.descuento || 0).toFixed(2)}</descuento>
+      <cantidad>${cantidad.toFixed(2)}</cantidad>
+      <precioUnitario>${precioUnitario.toFixed(6)}</precioUnitario>
+      <descuento>${descuento.toFixed(2)}</descuento>
       <precioTotalSinImpuesto>${subtotal.toFixed(2)}</precioTotalSinImpuesto>
       <impuestos>
         <impuesto>
@@ -129,6 +152,7 @@ ${this.generateDetallesXml(invoiceData.items)}
    * Escape XML special characters
    */
   private escapeXml(text: string): string {
+    if (!text) return '';
     return text
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')

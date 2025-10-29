@@ -200,15 +200,15 @@ export class InvoiceController {
    */
   private generateAccessKey(data: SendInvoiceDto): string {
     const fecha = data.fechaEmision.split('/'); // DD/MM/YYYY
-    const dd = fecha[0];
-    const mm = fecha[1];
-    const yyyy = fecha[2];
+    const dd = fecha[0].trim();
+    const mm = fecha[1].trim();
+    const yyyy = fecha[2].trim();
 
     const tipo = '01'; // 01 = Factura
-    const ruc = data.rucEmisor;
-    const ambiente = data.ambiente || '1'; // 1 = Pruebas
-    const serie = data.establecimiento + data.puntoEmision; // 001001
-    const secuencial = data.secuencial.padStart(9, '0'); // 000000001
+    const ruc = data.rucEmisor.trim();
+    const ambiente = (data.ambiente || '1').trim(); // 1 = Pruebas
+    const serie = (data.establecimiento.trim() + data.puntoEmision.trim()); // 001001
+    const secuencial = data.secuencial.trim().padStart(9, '0'); // 000000001
     const codigo = Math.floor(Math.random() * 100000000)
       .toString()
       .padStart(8, '0'); // Código numérico aleatorio
@@ -233,7 +233,11 @@ export class InvoiceController {
 
     // Process from right to left
     for (let i = base.length - 1; i >= 0; i--) {
-      sum += parseInt(base[i]) * factor;
+      const digit = parseInt(base[i]);
+      if (isNaN(digit)) {
+        throw new Error(`Carácter no numérico encontrado en posición ${i}: '${base[i]}'`);
+      }
+      sum += digit * factor;
       factor = factor === 7 ? 2 : factor + 1;
     }
 

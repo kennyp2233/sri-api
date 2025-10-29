@@ -1,106 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<factura xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"  id="comprobante" version="2.1.0">
-  <infoTributaria>
-    <ambiente>1</ambiente>
-    <tipoEmision>1</tipoEmision>
-    <razonSocial>EMPRESA DE PRUEBAS S.A.</razonSocial>
-    <nombreComercial>EMPRESA PRUEBAS</nombreComercial>
-    <ruc>1711508547001</ruc>
-    <claveAcceso>0710202501171150854700110020010000008174316196816</claveAcceso>
-    <codDoc>01</codDoc>
-    <estab>002</estab>
-    <ptoEmi>001</ptoEmi>
-    <secuencial>000000817</secuencial>
-    <dirMatriz>AV. PRINCIPAL 123 Y SECUNDARIA, QUITO</dirMatriz>
-  </infoTributaria>
-  <infoFactura>
-    <fechaEmision>07/10/2025</fechaEmision>
-    <dirEstablecimiento>AV. PRINCIPAL 123 Y SECUNDARIA, QUITO</dirEstablecimiento>
-    <obligadoContabilidad>SI</obligadoContabilidad>
-    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
-    <razonSocialComprador>CONSUMIDOR FINAL</razonSocialComprador>
-    <identificacionComprador>9999999999999</identificacionComprador>
-    <direccionComprador>QUITO - ECUADOR</direccionComprador>
-    <totalSinImpuestos>46.00</totalSinImpuestos>
-    <totalDescuento>0.00</totalDescuento>
-    <totalConImpuestos>
-      <totalImpuesto>
-        <codigo>2</codigo>
-        <codigoPorcentaje>2</codigoPorcentaje>
-        <descuentoAdicional>0.00</descuentoAdicional>
-        <baseImponible>46.00</baseImponible>
-        <valor>6.90</valor>
-      </totalImpuesto>
-    </totalConImpuestos>
-    <propina>0.00</propina>
-    <importeTotal>52.90</importeTotal>
-    <moneda>DOLAR</moneda>
-    <pagos>
-      <pago>
-        <formaPago>01</formaPago>
-        <total>52.90</total>
-        <plazo>0</plazo>
-        <unidadTiempo>DIAS</unidadTiempo>
-      </pago>
-    </pagos>
-  </infoFactura>
-  <detalles>
-    <detalle>
-      <codigoPrincipal>PROD001</codigoPrincipal>
-      <descripcion>PRODUCTO DE PRUEBA 1</descripcion>
-      <cantidad>2.00</cantidad>
-      <precioUnitario>10.500000</precioUnitario>
-      <descuento>0.00</descuento>
-      <precioTotalSinImpuesto>21.00</precioTotalSinImpuesto>
-      <impuestos>
-        <impuesto>
-          <codigo>2</codigo>
-          <codigoPorcentaje>2</codigoPorcentaje>
-          <tarifa>15</tarifa>
-          <baseImponible>21.00</baseImponible>
-          <valor>3.15</valor>
-        </impuesto>
-      </impuestos>
-    </detalle>
-    <detalle>
-      <codigoPrincipal>PROD002</codigoPrincipal>
-      <descripcion>PRODUCTO DE PRUEBA 2</descripcion>
-      <cantidad>1.00</cantidad>
-      <precioUnitario>25.000000</precioUnitario>
-      <descuento>0.00</descuento>
-      <precioTotalSinImpuesto>25.00</precioTotalSinImpuesto>
-      <impuestos>
-        <impuesto>
-          <codigo>2</codigo>
-          <codigoPorcentaje>2</codigoPorcentaje>
-          <tarifa>15</tarifa>
-          <baseImponible>25.00</baseImponible>
-          <valor>3.75</valor>
-        </impuesto>
-      </impuestos>
-    </detalle>
-  </detalles>
-  <infoAdicional>
-    <campoAdicional nombre="Email">prueba@example.com</campoAdicional>
-  </infoAdicional>
-
-<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="signature">
-  <ds:SignedInfo>
-    <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
-    <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
-    <ds:Reference URI="">
-      <ds:Transforms>
-        <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-      </ds:Transforms>
-      <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-      <ds:DigestValue>AwBJuk4LaJ6WT5IchAVE4fbnEDv4m03GLK8zEHh6ihQ=</ds:DigestValue>
-    </ds:Reference>
-  </ds:SignedInfo>
-  <ds:SignatureValue>buAgBwY/bov0bLAhIiZFGLHYFE1kUEK3IR67ns6Jz2bAhZKE2vAFm1/ggYM4YZb91X+3kvLwHqRKWJ9iUngV5lqKsF+7aDS2yrETDBxztXFZQC7L9PykNNwzQeScoiZRDkI3NLuxrRxZYtvlmfNYD82olsb0AiBrLXxlyE6FB+6TcLuqv3LTMgFJoJsbdzqVhZ6XpQ/3RrVGASFt3a9pSG1uVV7X2rB5xafpFA/LxaGJZUynCxIt9fzXbGn1tdzX8f4Rlavc/sraGk14juGiWIYdDJUQEOABRTTWceYPN35hpbYTkMXQvIrcJ20O2bIguQZOQCKT8Jk+D0bF5rdtLQ==</ds:SignatureValue>
-  <ds:KeyInfo>
-    <ds:X509Data>
-      <ds:X509Certificate>MIID6TCCAtGgAwIBAgIBATANBgkqhkiG9w0BAQsFADB9MR0wGwYDVQQDExRUZXN0IENlcnRpZmljYXRlIFNSSTELMAkGA1UEBhMCRUMxEjAQBgNVBAgTCVBpY2hpbmNoYTEOMAwGA1UEBxMFUXVpdG8xFTATBgNVBAoTDFRlc3QgQ29tcGFueTEUMBIGA1UECxMLRGV2ZWxvcG1lbnQwHhcNMjUxMDA3MjMwMjEyWhcNMjYxMDA3MjMwMjEyWjB9MR0wGwYDVQQDExRUZXN0IENlcnRpZmljYXRlIFNSSTELMAkGA1UEBhMCRUMxEjAQBgNVBAgTCVBpY2hpbmNoYTEOMAwGA1UEBxMFUXVpdG8xFTATBgNVBAoTDFRlc3QgQ29tcGFueTEUMBIGA1UECxMLRGV2ZWxvcG1lbnQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDNqGwLwb1MVBGwYgkAybDgrovKn/BxvJxYGENqg92eO6JF/Rsmo9G69EbXCqiMQ2z7wfxVETrQ9kHsbCgO5OOiCHyqvYNKB3ct5ifH8zAO62Xck0HKFZLp27e9C/RjrjXLFhWkPOYHDG0uqrHK7HzNiySs/te6WSEA97hY9ceaTL5lXOT4atrp+nrN7O5ED+L596cSMMW+5117F3nKFKQjo6WeKXaA43eQYV4zH5IkLagYEvL92B/2XOgLccSEjLKqxCsAr9hBoS2wtiATthXQGIpnwnPyO5jXZo+uuitw56K8eZ6LFROqQQwpWRL3vyPS9IVv5NJcJ+OP36FReV3zAgMBAAGjdDByMAkGA1UdEwQCMAAwCwYDVR0PBAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDARBglghkgBhvhCAQEEBAMCBaAwJgYDVR0RBB8wHYIJbG9jYWxob3N0hhBodHRwOi8vbG9jYWxob3N0MA0GCSqGSIb3DQEBCwUAA4IBAQCZxSxsst1IodFm4l4xTWzPiuJS3IM3B/pUpnKVNW5UyvINCFzgFJ5/HwCOP6GQrx57XpK/Cjp2M28eduU2lluC7SZYBFONMVbFZOPjeioI+owduWaFrqSzp+bCBBsIEHAgiltmNeyQr4oMDQCcPQfkmgTU/Wf9dGnpM1xGpjHNRYyBzbJ5JvaO6QO6AaUcyds4Pi2UOibOUeENqSEtYRvSt26/Jv+qSCx+G0FYWxGs2+r3ZseZ7ZfjKlGjXt2KFtxguL0MKXmj9HGXpJdAobeWbqi66iz7Ou8s2MYxVeTky6A5/r3exMuf6Bzubo3uQViG3WJNXZKYGF5EOeYkDyZn</ds:X509Certificate>
-    </ds:X509Data>
-  </ds:KeyInfo>
-</ds:Signature>
-</factura>

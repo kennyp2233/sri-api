@@ -6,15 +6,25 @@ export class InvoiceItemDto {
   @IsNotEmpty()
   descripcion: string;
 
-  @Transform(({ value }) => parseFloat(value))
+  @Transform(({ value }) => {
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? 0 : parsed;
+  })
   @IsNumber()
   cantidad: number;
 
-  @Transform(({ value }) => parseFloat(value))
+  @Transform(({ value }) => {
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? 0 : parsed;
+  })
   @IsNumber()
   precioUnitario: number;
 
-  @Transform(({ value }) => value ? parseFloat(value) : 0)
+  @Transform(({ value }) => {
+    if (!value) return 0;
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? 0 : parsed;
+  })
   @IsNumber()
   @IsOptional()
   descuento?: number;
@@ -72,6 +82,16 @@ export class SendInvoiceDto {
   emailComprador?: string;
 
   // Detalles de la factura
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return value;
+      }
+    }
+    return value;
+  })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => InvoiceItemDto)
