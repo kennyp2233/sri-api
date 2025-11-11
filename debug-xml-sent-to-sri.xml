@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"  id="comprobante" version="2.1.0">
+  <infoTributaria>
+    <ambiente>1</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>EMPRESA DE PRUEBA S.A.</razonSocial>
+    <nombreComercial>EMPRESA PRUEBA</nombreComercial>
+    <ruc>1721294799001</ruc>
+    <claveAcceso>2710202501172129479900110010010000000011388680815</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>001</ptoEmi>
+    <secuencial>000000001</secuencial>
+    <dirMatriz>Quito, Ecuador</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>27/10/2025</fechaEmision>
+    <dirEstablecimiento>Quito, Ecuador</dirEstablecimiento>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>CLIENTE DE PRUEBA S.A.</razonSocialComprador>
+    <identificacionComprador>1712345678001</identificacionComprador>
+    <direccionComprador>Quito, Ecuador</direccionComprador>
+    <totalSinImpuestos>100.00</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>2</codigoPorcentaje>
+        <descuentoAdicional>0.00</descuentoAdicional>
+        <baseImponible>100.00</baseImponible>
+        <valor>15.00</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>115.00</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>01</formaPago>
+        <total>115.00</total>
+        <plazo>0</plazo>
+        <unidadTiempo>DIAS</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>PROD001</codigoPrincipal>
+      <descripcion>Producto de prueba</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>100.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>100.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>2</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>100.00</baseImponible>
+          <valor>15.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Email">cliente@prueba.com</campoAdicional>
+  </infoAdicional>
+
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="signature">
+  <ds:SignedInfo>
+    <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+    <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+    <ds:Reference URI="">
+      <ds:Transforms>
+        <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+      </ds:Transforms>
+      <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+      <ds:DigestValue>PZhjkRt7mQOVUWdzyXygriWltQLBvh1UaPNJRjNwiVw=</ds:DigestValue>
+    </ds:Reference>
+  </ds:SignedInfo>
+  <ds:SignatureValue>h68j5PaF8eevEQnuyQLEZRByVMZ+q6V2HgiuGmicXPUAj9A5qFzWPdRzRhOtN/JAXAlmuY4i1jXm9kwsMf4BaO0Dm16Oe+cx3+pQAnsaWh1OmgmGHyzNZlAVURHFh+hoYEjGfENBCBhttSGJvYIoP12IO/m4YeU0xSnlwtLGlYOmt1Y6SHrqMMW3ORns+8mV5ml1c+PGXCcuO7lHfMPsWSYPd8C4OY2WeNxDNMpTsO0ycAopIZU57Gsc14+oNnpTrKjwSmprwvwxLmSrvRfU3xHrmkV++vyRHWoNpGfu3IiezkeLHcOIGQs3M6xyxUrj8XrebTFhBb+9U/OwN2Hbjg==</ds:SignatureValue>
+  <ds:KeyInfo>
+    <ds:X509Data>
+      <ds:X509Certificate>MIIKpjCCCI6gAwIBAgIIWazeEdB9h/gwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUwNzI4MTc1OTQzWhcNMjYwNTE0MDE1ODAwWjCBqjEoMCYGA1UEAwwfR0VPUkdFIE1BVFRIRVVTIFFVSVNIUEUgSElEQUxHTzEgMB4GA1UEBRMXMTcyMTI5NDc5OS0yODA3MjUxMzA5MzQxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtWgEwSb3O5UoRoW5XboMotVtr4QDewQGWAD6mTk14lQp4vmuIHK6tuiSb6VEkR0nMUjaU8oeiMsPAclb3qRD36Hka/NnuTMPaRfH9IpNpwnd+62pZdAt2uelO6UntJJ8LCSKxNBqJ/X+XXbE82IfImfc4qUzl3Y7A1Kzgar+bDnGOJ9XsRQiTxAaC+Tn8el29pNTKW6/2rllm3h3wGPxhECQ5blvjbWqGZpRSoyL2y2YPsqf0tWO8bhRVT1mLx6y4lX+Q9Bs/GdJiGvWFM3tW5V+HAgWaIEQNt1SI+1hpOkf8e6CgWkIMunGFbbHB5NdLznyzuI7DRevjbOXjVlmAwIDAQABo4IF3TCCBdkwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42uYt29jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3AwJwYDVR0RBCAwHoEcbWF0dGhldXMucXVpc2hwZTAxQGdtYWlsLmNvbTCCAQYGA1UdIASB/jCB+zBaBgorBgEEAYKmcgIHMEwwSgYIKwYBBQUHAgIwPh48AEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAFAAZQByAHMAbwBuAGEAIABOAGEAdAB1AHIAYQBsMIGcBgorBgEEAYKmcgIBMIGNMIGKBggrBgEFBQcCARZ+aHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBQZXJzb25hIE5hdHVyYWwucGRmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCCAg8GA1UdHwSCAgYwggICMIHeoDqgOIY2aHR0cDovL2NybDEuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwxL2NybGZpbGUuY3JsooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMDygOqA4hjZodHRwOi8vY3JsMi5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDIvY3JsZmlsZS5jcmwwgeCggd2ggdqGgddodHRwczovL3BvcnRhbC1vcGVyYWRvcjIuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvd2ViZGlzdC9jZXJ0ZGlzdD9jbWQ9Y3JsJmlzc3Vlcj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQzAdBgNVHQ4EFgQU/EDYlrnvQtf9fv7wFwDO/ZVnneswKwYDVR0QBCQwIoAPMjAyNTA3MjgxNzU5NDNagQ8yMDMwMDcyODE3NTk0M1owCwYDVR0PBAQDAgXgMBoGCisGAQQBgqZyAwEEDAwKMTcyMTI5NDc5OTAaBgorBgEEAYKmcgMJBAwMCkxBIEFSR0VMSUEwEQYKKwYBBAGCpnIDIgQDDAEuMCcGCisGAQQBgqZyAwcEGQwXQlVFTkFWSVNUQSBFMjEzIFkgRklDT0EwHwYKKwYBBAGCpnIDAgQRDA9HRU9SR0UgTUFUVEhFVVMwHQYKKwYBBAGCpnIDIAQPDA05OTk5OTk5OTk5OTk5MBEGCisGAQQBgqZyAyMEAwwBLjATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1IwFwYKKwYBBAGCpnIDAwQJDAdRVUlTSFBFMBoGCisGAQQBgqZyAx4EDAwKRVNUVURJQU5URTAdBgorBgEEAYKmcgMLBA8MDTE3MjEyOTQ3OTkwMDEwEQYKKwYBBAGCpnIDHQQDDAEuMBcGCisGAQQBgqZyAwQECQwHSElEQUxHTzAaBgorBgEEAYKmcgMIBAwMCjA5OTUyNzI1NDkwDQYJKoZIhvcNAQELBQADggIBAAVSYcO7vph+f1NF9xO0vAo8byp0goIYJ/VlldykB73zpddxQBubD8LDsuuaOyHDQIQg/SwalX/+UDsZsyV4vLVL4lbJvNxxF/OJzQBv81uNcCSqugXKUSh0hYRxjhyxdLx11B9G71EyqDsbmkGwt8FRRCJ1O32EEsKFNHqHgLzVAvvRDz9AhbRWMGjqzohMUeHO4+ypoAKo+BpGg/yNDw5rik5IJfm6bKWpKorHE7Z5OL4wreWCfXGC0xWdDXctH0nPR+RHPHL8Lhs+VPrlUtZ2Fyw/y/RQ0hm1oYebmW2Eujql+wp+Gl3AJK5f311WGWpSA8fLwiIHdlR5zFY3UN3KCc3TNI7i169dXSyEY26wRy4ZK1ZPGng5ckAD31byhOQL2cNTmEXIaDA9y+5C137U3teDy+4Yv8epqxMbri/KD6f+4ER5IiUl1fbBcZM5Gnk6QkoBn5fRTk/W/N3jwQ77szLCdWMwUWYWtZz6QDuqV5bFwLh8kg1HzvTT3/Sq5h+LXGwBBqqQb2wFp/hfkZGeopN9Jyroxq74W+2//dbZH+orKOE0ahjhR2ZJYm6H4rlgNNDfv/IWBBQ7yFw8IHDHsGl5++W08EoJnXFRKeeqf6FVkxacVtm4HLEU9HOfRjxJpUapVOqj0eFwYlK7e9ukipsx5VuNnvjctEpGZXNv</ds:X509Certificate>
+    </ds:X509Data>
+  </ds:KeyInfo>
+</ds:Signature>
+</factura>

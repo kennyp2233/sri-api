@@ -8,6 +8,7 @@ import {
   UseInterceptors,
   BadRequestException,
   Logger,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SendInvoiceDto } from '../../application/dto/send-invoice.dto';
@@ -15,6 +16,8 @@ import { SriClientService } from '../../../sri-integration/infrastructure/servic
 import { RideGeneratorService } from '../../../sri-integration/infrastructure/services/ride-generator.service';
 import { XadesSignerService } from '../../../digital-signature/services/xades-signer.service';
 import { SriXmlGeneratorService } from '../xml/sri-xml-generator.service';
+import { ParseInvoicePipe } from 'src/common/pipes/parse.invoice.pipe';
+import { ParseFormDataInterceptor } from 'src/common/interceptor/parse-form-data.interceptor';
 
 @Controller('invoice')
 export class InvoiceController {
@@ -25,20 +28,26 @@ export class InvoiceController {
     private readonly rideGenerator: RideGeneratorService,
     private readonly xadesSigner: XadesSignerService,
     private readonly xmlGenerator: SriXmlGeneratorService,
-  ) {}
+  ) { }
 
   /**
    * POST /invoice
    * Send invoice to SRI
    */
   @Post()
-  @UseInterceptors(FileInterceptor('certificado'))
+  @UseInterceptors(FileInterceptor('certificado'), ParseFormDataInterceptor)
   async sendInvoice(
     @Body() invoiceData: SendInvoiceDto,
     @UploadedFile() certificado: Express.Multer.File,
   ) {
     this.logger.log('Received invoice submission request');
-
+    console.log('=== Controller - Final Invoice Data ===');
+    console.log('Invoice Data keys:', Object.keys(invoiceData));
+    console.log('Items type:', typeof invoiceData.items);
+    console.log('Items is array:', Array.isArray(invoiceData.items));
+    console.log('Items count:', invoiceData.items?.length);
+    console.log('Invoice items detail:', JSON.stringify(invoiceData.items, null, 2));
+    console.log('Certificate received:', !!certificado);
     try {
       // Validate certificate file
       if (!certificado) {
@@ -163,13 +172,13 @@ export class InvoiceController {
         // Include messages for non-authorized invoices
         response.fechaAutorizacion = autorizacion?.fechaAutorizacion;
         response.ambiente = autorizacion?.ambiente;
-        
+
         if (autorizacion?.mensajes) {
           // Los mensajes vienen en un array de objetos con propiedad mensaje
           const mensajesWrapper = Array.isArray(autorizacion.mensajes)
             ? autorizacion.mensajes
             : [autorizacion.mensajes];
-          
+
           response.mensajes = mensajesWrapper
             .flatMap((wrapper: any) => {
               const mensajesData = wrapper.mensaje;

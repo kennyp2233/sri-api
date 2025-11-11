@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { SendInvoiceDto } from '../../application/dto/send-invoice.dto';
+import { InvoiceItemDto, SendInvoiceDto } from '../../application/dto/send-invoice.dto';
 
 @Injectable()
 export class SriXmlGeneratorService {
@@ -109,18 +109,23 @@ ${this.generateDetallesXml(invoiceData.items)}
   /**
    * Generate XML for invoice items (detalles)
    */
-  private generateDetallesXml(items: any[]): string {
+  private generateDetallesXml(items: InvoiceItemDto[]): string {
     return items
       .map((item, index) => {
+        console.log('Generating XML for item:', item);
         const cantidad = Number(item.cantidad) || 0;
         const precioUnitario = Number(item.precioUnitario) || 0;
         const descuento = Number(item.descuento) || 0;
         const subtotal = cantidad * precioUnitario - descuento;
         const iva = subtotal * 0.15;
+        const descripcion = (item.descripcion || '').toString().trim();
+        if (!descripcion) {
+          throw new Error(`El item #${index + 1} tiene descripcion vacía. El SRI no lo permite.`);
+        }
 
         return `    <detalle>
-      <codigoPrincipal>${item.codigoPrincipal || `ITEM-${index + 1}`}</codigoPrincipal>
-      <descripcion>${this.escapeXml(item.descripcion)}</descripcion>
+      <codigoPrincipal>${this.escapeXml(item.codigoPrincipal || `ITEM-${index + 1}`)}</codigoPrincipal>
+      <descripcion>${this.escapeXml(descripcion)}</descripcion>
       <cantidad>${cantidad.toFixed(2)}</cantidad>
       <precioUnitario>${precioUnitario.toFixed(6)}</precioUnitario>
       <descuento>${descuento.toFixed(2)}</descuento>
