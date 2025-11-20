@@ -1,0 +1,17 @@
+curl --location 'http://localhost:3000/invoice' \
+--form 'certificado=@"/F:/WORK/facturacion/sri_api/cert/GEORGE MATTHEUS QUISHPE HIDALGO 1721294799-280725130934.p12"' \
+--form 'certificadoPassword="FCBarcelona1899"' \
+--form 'rucEmisor=" 1234567890001"' \
+--form 'razonSocialEmisor=" EMPRESA DE PRUEBA S.A."' \
+--form 'nombreComercial=" EMPRESA PRUEBA"' \
+--form 'direccionEmisor=" Quito, Ecuador"' \
+--form 'establecimiento=" 001"' \
+--form 'puntoEmision=" 001"' \
+--form 'secuencial=" 000000001"' \
+--form 'identificacionComprador=" 1712345678001"' \
+--form 'razonSocialComprador=" CLIENTE DE PRUEBA S.A."' \
+--form 'direccionComprador=" Quito, Ecuador"' \
+--form 'emailComprador=" cliente@prueba.com"' \
+--form 'fechaEmision=" 27/10/2025"' \
+--form 'ambiente=" 1"' \
+--form 'items="[{\"descripcion\":\"Producto de prueba\",\"cantidad\":\"1\",\"precioUnitario\":\"100.00\",\"descuento\":\"0\",\"codigoPrincipal\":\"PROD001\"}]"'

@@ -1,30 +1,17 @@
 import { IsString, IsNotEmpty, IsNumber, IsArray, ValidateNested, IsOptional } from 'class-validator';
-import { Type, Transform } from 'class-transformer';
+import { Type } from 'class-transformer';
 
 export class InvoiceItemDto {
   @IsString()
   @IsNotEmpty()
   descripcion: string;
 
-  @Transform(({ value }) => {
-    const parsed = parseFloat(value);
-    return isNaN(parsed) ? 0 : parsed;
-  })
   @IsNumber()
   cantidad: number;
 
-  @Transform(({ value }) => {
-    const parsed = parseFloat(value);
-    return isNaN(parsed) ? 0 : parsed;
-  })
   @IsNumber()
   precioUnitario: number;
 
-  @Transform(({ value }) => {
-    if (!value) return 0;
-    const parsed = parseFloat(value);
-    return isNaN(parsed) ? 0 : parsed;
-  })
   @IsNumber()
   @IsOptional()
   descuento?: number;
@@ -35,7 +22,6 @@ export class InvoiceItemDto {
 }
 
 export class SendInvoiceDto {
-  // Información del emisor
   @IsString()
   @IsNotEmpty()
   rucEmisor: string;
@@ -54,17 +40,16 @@ export class SendInvoiceDto {
 
   @IsString()
   @IsNotEmpty()
-  establecimiento: string; // 001
+  establecimiento: string;
 
   @IsString()
   @IsNotEmpty()
-  puntoEmision: string; // 001
+  puntoEmision: string;
 
   @IsString()
   @IsNotEmpty()
-  secuencial: string; // 000000001
+  secuencial: string;
 
-  // Información del comprador
   @IsString()
   @IsNotEmpty()
   identificacionComprador: string;
@@ -81,17 +66,6 @@ export class SendInvoiceDto {
   @IsOptional()
   emailComprador?: string;
 
-  // Detalles de la factura
-  @Transform(({ value }) => {
-    if (typeof value === 'string') {
-      try {
-        return JSON.parse(value);
-      } catch {
-        return value;
-      }
-    }
-    return value;
-  })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => InvoiceItemDto)
@@ -99,15 +73,13 @@ export class SendInvoiceDto {
 
   @IsString()
   @IsNotEmpty()
-  fechaEmision: string; // DD/MM/YYYY
+  fechaEmision: string;
 
-  // Certificado P12
   @IsString()
   @IsNotEmpty()
   certificadoPassword: string;
 
-  // Ambiente (opcional, por defecto pruebas)
   @IsString()
   @IsOptional()
-  ambiente?: '1' | '2'; // 1=Pruebas, 2=Producción
+  ambiente?: '1' | '2';
 }
